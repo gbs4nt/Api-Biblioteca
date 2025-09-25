@@ -27,7 +27,8 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private Set<Livro> livrosAlugados = new HashSet<>();
 
-    @Column(name = "LIVRO_PEDIDO")
+    @OneToOne
+    @JoinColumn(name = "LIVRO_PEDIDO")
     private Livro livroPedido;
 
     @CreationTimestamp
