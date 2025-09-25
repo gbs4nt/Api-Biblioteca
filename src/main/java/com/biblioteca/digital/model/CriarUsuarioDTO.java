@@ -1,4 +1,6 @@
 package com.biblioteca.digital.model;
 
-public record CriarUsuarioDTO() {
+import java.util.Set;
+
+public record CriarUsuarioDTO(String nome,String cpf, Set<Livro> livrosAlugados) {
 }

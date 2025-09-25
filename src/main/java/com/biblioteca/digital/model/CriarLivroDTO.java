@@ -1,4 +1,4 @@
 package com.biblioteca.digital.model;
 
-public record LivroDTO(String titulo, Double preco, Autor autor,String genero) {
+public record CriarLivroDTO(String titulo, Double preco,Usuario usuario, String nomeAutor, String genero, boolean alugado) {
 }
