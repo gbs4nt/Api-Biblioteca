@@ -39,5 +39,12 @@ public class LivroController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{usuarioId}/{livroId}/devolver")
+    public ResponseEntity<Void> devolverLivro(@PathVariable("usuarioId") String usuarioId,
+                                               @PathVariable("livroId") String livroId){
+        livroService.devolverLivro(usuarioId,livroId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

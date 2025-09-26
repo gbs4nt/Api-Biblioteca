@@ -1,6 +1,5 @@
 package com.biblioteca.digital.service;
 
-import com.biblioteca.digital.model.AtualizarUsuarioDTO;
 import com.biblioteca.digital.model.CriarLivroDTO;
 import com.biblioteca.digital.model.Livro;
 import com.biblioteca.digital.model.Usuario;
@@ -53,39 +52,75 @@ public class LivroService {
            Set<Livro> livrosPedidos = new HashSet<>();
 
            if (livro.isAlugado()) {
-               queueService.adicionarNaFila(usuario);
                usuario.setLivroPedido(livro);
+               queueService.adicionarNaFila(usuario);
+               usuarioRepository.save(usuario);
                throw new RuntimeException("O livro que você tentou alugar já tem dono.");
+
+
            }
            livrosPedidos.add(livro);
            livro.setAlugado(true);
            usuario.setLivrosAlugados(livrosPedidos);
            livro.setUsuario(usuario);
-           System.out.println("Livro alugado com sucesso!");
            usuarioRepository.save(usuario);
            livroRepository.save(livro);
+           System.out.println("Livro alugado com sucesso!");
        }else {
            throw new EntityNotFoundException("O usuário passado não existe");
        }
 
     }
 
-//    public void devolverLivro(Usuario usuario, Queue<Usuario> usuariosNaFila){
-//        Livro livroPedido = usuario.getLivroPedido();
-//        Set<Livro> livrosAlugados = usuario.getLivrosAlugados();
-//        List<Usuario> usuarioStream = usuariosNaFila.stream()
-//                .filter(usuarioNaFila -> usuarioNaFila.getLivroPedido().equals(livroPedido))
-//                .toList();
-//        if(!usuarioStream.isEmpty()){
-//
-//            Usuario removed = usuariosNaFila.remove();
-//            removed.setLivrosAlugados(usuario.getLivrosAlugados());
-//            usuario.setLivrosAlugados(null);
-//
-//
-//        }
-//
-//
-//
-//    }
+    public void devolverLivro(String usuarioId, String livroId){
+        var usuarioBuscaId = UUID.fromString(usuarioId);
+        var usuarioEntity = usuarioRepository.findById(usuarioBuscaId);
+        var livroBuscaId = UUID.fromString(livroId);
+        var livroEntity = livroRepository.findById(livroBuscaId);
+
+
+        if(usuarioEntity.isPresent() && livroEntity.isPresent()){
+            var usuario = usuarioEntity.get();
+            var livro = livroEntity.get();
+        Livro livroPedido = usuario.getLivroPedido();
+        /*Pega os usuários que tem livroPedido igual ao livroPedido do usuário que foi passado
+        como parâmetro do método, ou seja, só os que quiserem o mesmo livro que o usuário
+         estão devolvendo irão retornar
+        */
+            Optional<Usuario> usuarioComLivroIgual = queueService.getFila()
+                    .stream()
+                    .findFirst();
+        if(usuarioComLivroIgual.isPresent()) {
+
+           var usuarioSatisfeito = usuarioComLivroIgual.get();
+           usuarioSatisfeito.setLivroPedido(null);
+            Usuario proximoDono = queueService.getFila().remove();
+            Set<Livro> livroEntregue = new HashSet<>();
+            livroEntregue.add(livro);
+            
+            proximoDono.setLivrosAlugados(livroEntregue);
+            livro.setUsuario(proximoDono);
+
+
+            //remove o livro em específico dos livros do usuário anterior
+            usuario.getLivrosAlugados().remove(livro);
+
+            usuarioRepository.save(usuario);
+            usuarioRepository.save(proximoDono);
+
+        }else {
+            livro.setUsuario(null);
+            livro.setAlugado(false);
+            usuario.getLivrosAlugados().remove(livro);
+
+            usuarioRepository.save(usuario);
+
+        }
+
+
+        }
+
+
+
+    }
 }
