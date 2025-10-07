@@ -54,7 +54,7 @@ Registra o empréstimo de um livro por um usuário.
 
 Exemplo: livros/1/2/emprestar
 
-Resposta: 204 No Content
+Resposta: ```204 No Content```
 
 🔁 Devolver livro
 
@@ -66,5 +66,23 @@ Exemplo de URL:
 /livros/1/10/devolver
 
 
-Resposta: 204 No Content
+Resposta: ```204 No Content```
+
+
+### 👤 Usuários
+### ➕ Criar usuário
+
+***POST*** `/usuarios`
+Cadastra um novo usuário da biblioteca.
+
+**Body (JSON):**
+```
+json
+{
+  "nome": "Gabriel Lima",
+  "email": "gabriel@email.com"
+}
+```
+
+Resposta: ```201 Created```
 
