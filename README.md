@@ -40,8 +40,9 @@ Cria um novo livro na biblioteca.
 json
 {
   "titulo": "O Senhor dos Anéis",
-  "autor": "J.R.R. Tolkien",
-  "anoPublicacao": 1954
+  "preco" : 20.99,
+  "nomeAutor": "J.R.R. Tolkien",
+  "genero" : "Fantasia"
 }
 ```
 Resposta: ```201 created```
