@@ -56,14 +56,15 @@ Exemplo: livros/1/2/emprestar
 
 Resposta: ```204 No Content```
 
-🔁 Devolver livro
+## 🔁 Devolver livro
 
-PUT /livros/{usuarioId}/{livroId}/devolver
+**PUT** `/livros/{usuarioId}/{livroId}/devolver`
+
 Registra a devolução de um livro emprestado.
 
 Exemplo de URL:
 
-/livros/1/10/devolver
+Exemplo: /livros/1/10/devolver
 
 
 Resposta: ```204 No Content```
